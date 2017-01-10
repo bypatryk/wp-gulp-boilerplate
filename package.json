@@ -1,0 +1,26 @@
+{
+  "name": "wordpress-boilerplate",
+  "version": "0.1.0",
+  "description": "A boilerplate to streamline WP themes development.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "wordpress",
+    "wordpress-theme",
+    "wordpress-starter-theme",
+    "starter-kit",
+    "theme",
+    "gulp",
+    "sass"
+  ],
+  "author": "Patryk Pawłowski <hello@patryk.me>",
+  "license": "MIT",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-postcss": "^6.2.0",
+    "require-dir": "^0.3.1"
+  }
+}
