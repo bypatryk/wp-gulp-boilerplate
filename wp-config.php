@@ -1,72 +1,90 @@
 <?php
-// ===================================================
-// Load database info and local development parameters
-// ===================================================
-if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
-	define( 'WP_LOCAL_DEV', true );
-	include( dirname( __FILE__ ) . '/local-config.php' );
-}elseif ( file_exists( dirname( __FILE__ ) . '/local-config-sample.php' ) ) {
-	define( 'WP_LOCAL_DEV', false );
-	include( dirname( __FILE__ ) . '/local-config.php' );
-} else {
-	define( 'WP_LOCAL_DEV', false );
-	define( 'DB_NAME', 'wordpress-boilerplate' );
-	define( 'DB_USER', 'root' );
-	define( 'DB_PASSWORD', '' );
-	define( 'DB_HOST', 'localhost' ); // Probably 'localhost'
-	$table_prefix  = 'wp_';
+function is_localhost () {
+	$environments = array(
+		'localhost',
+		'127.0.0.1',
+		'::1'
+	);
+
+	return in_array ($_SERVER['REMOTE_ADDR'], $environments) && file_exists (__DIR__ . '/config-local.php');
 }
-// ========================
-// Custom Content Directory
-// ========================
-define( 'WP_CONTENT_DIR', dirname( __FILE__ ) . '/content' );
-define( 'WP_CONTENT_URL', WP_HOME . '/content' );
-// ================================================
-// You almost certainly do not want to change these
-// ================================================
-define( 'DB_CHARSET', 'utf8' );
-define( 'DB_COLLATE', '' );
-// ==============================================================
-// Salts, for security
-// Grab these from: https://api.wordpress.org/secret-key/1.1/salt
-// ==============================================================
-define( 'AUTH_KEY',         'put your unique phrase here' );
-define( 'SECURE_AUTH_KEY',  'put your unique phrase here' );
-define( 'LOGGED_IN_KEY',    'put your unique phrase here' );
-define( 'NONCE_KEY',        'put your unique phrase here' );
-define( 'AUTH_SALT',        'put your unique phrase here' );
-define( 'SECURE_AUTH_SALT', 'put your unique phrase here' );
-define( 'LOGGED_IN_SALT',   'put your unique phrase here' );
-define( 'NONCE_SALT',       'put your unique phrase here' );
-// ================================
-// Language
-// Leave blank for American English
-// ================================
-define( 'WPLANG', '' );
-// ===========
-// Hide errors
-// ===========
-// ini_set( 'display_errors', 0 );
-// define( 'WP_DEBUG_DISPLAY', false );
-// =================================================================
-// Debug mode
-// Debugging? Enable these. Can also enable them in local-config.php
-// =================================================================
-define( 'SAVEQUERIES', true );
-define( 'WP_DEBUG', true );
-// ======================================
-// Load a Memcached config if we have one
-// ======================================
-if ( file_exists( dirname( __FILE__ ) . '/memcached.php' ) )
-	$memcached_servers = include( dirname( __FILE__ ) . '/memcached.php' );
-// ===========================================================================================
-// This can be used to programatically set the stage when deploying (e.g. production, staging)
-// ===========================================================================================
-define( 'WP_STAGE', '%%WP_STAGE%%' );
-define( 'STAGING_DOMAIN', '%%WP_STAGING_DOMAIN%%' ); // Does magic in WP Stack to handle staging domain rewriting
-// ===================
-// Bootstrap WordPress
-// ===================
-if ( !defined( 'ABSPATH' ) )
-	define( 'ABSPATH', dirname( __FILE__ ) . '/wordpress/' );
-require_once( ABSPATH . 'wp-settings.php' );
+
+function is_staging () {
+	$environments = array(
+		// List of staging hosts, e.g.
+		// staging.example.com
+		// http://staging.example.com
+	);
+
+	return in_array ($_SERVER['HTTP_HOST'], $environments) && file_exists (__DIR__ . '/config-staging.php');
+}
+
+/**
+ * Database tables prefix
+ * You probably want it to be more complex, e.g. 'wpexample123_'
+ */
+$table_prefix  = 'wp_';
+
+/**
+ * Salts and keys for security
+ * Generate them at https://api.wordpress.org/secret-key/1.1/salt
+ */
+define ('AUTH_KEY',         'put your unique phrase here');
+define ('SECURE_AUTH_KEY',  'put your unique phrase here');
+define ('LOGGED_IN_KEY',    'put your unique phrase here');
+define ('NONCE_KEY',        'put your unique phrase here');
+define ('AUTH_SALT',        'put your unique phrase here');
+define ('SECURE_AUTH_SALT', 'put your unique phrase here');
+define ('LOGGED_IN_SALT',   'put your unique phrase here');
+define ('NONCE_SALT',       'put your unique phrase here');
+
+/**
+ * Language
+ * Leave blank for American English
+ */
+define ('WPLANG', '');
+
+/**
+ * Load database info
+ * You probably don't want to change this
+ */
+if (is_localhost()) {
+	include (__DIR__ . '/config-local.php');
+} elseif (is_staging()) {
+	include (__DIR__ . '/config-staging.php');
+} else {
+	include (__DIR__ . '/config-production.php');
+}
+
+/**
+ * Define wordpress content directory
+ * You probably don't want to change this
+ * `build` and `dist` folders are generated with Gulp
+ */
+if (is_localhost()) {
+	define ('MY_WP_CONTENT_DIR', '/build');
+} else {
+	define ('MY_WP_CONTENT_DIR', '/dist');
+}
+define ('WP_CONTENT_DIR', __DIR__ . MY_WP_CONTENT_DIR);
+define ('WP_CONTENT_URL', WP_HOME . MY_WP_CONTENT_DIR);
+
+/**
+ * Define wordpress core directory
+ * You probably don't want to change this
+ */
+define ('MY_WP_CORE_DIR', '/wordpress');
+define ('WP_SITEURL', WP_HOME . MY_WP_CORE_DIR);
+
+/**
+ * You probably don't want to change this
+ */
+define ('DB_CHARSET', 'utf8');
+define ('DB_COLLATE', '');
+
+/**
+ * Absolute path to WordPress core directory
+ */
+if ( !defined ('ABSPATH') )
+	define ('ABSPATH', __DIR__ . MY_WP_CORE_DIR . '/');
+require_once (ABSPATH . 'wp-settings.php');
