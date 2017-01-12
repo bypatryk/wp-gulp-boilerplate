@@ -1,6 +1,6 @@
 var config = require('../config');
 
-var options = config.tasks.styles;
+var options = config.tasks.php;
 if (!options) return;
 
 var browserSync = require('browser-sync'),
@@ -15,14 +15,9 @@ var task = function () {
 
 	return gulp.src(src)
 		.pipe(plugins.changed(dest))
-		.pipe(plugins.if(!global.dist, plugins.sourcemaps.init()))
-		.pipe(plugins.sassGlob())
-		.pipe(plugins.sass(options.sass))
-		.pipe(plugins.cssnano(options.cssnano))
-		.pipe(plugins.if(!global.dist, plugins.sourcemaps.write('.')))
-		.pipe(gulp.dest(dest))
-		.pipe(browserSync.stream());
+		.pipe(plugins.htmlmin(options.htmlmin))
+		.pipe(gulp.dest(dest));
 }
 
-gulp.task('styles', task);
+gulp.task('php', task);
 module.exports = task;

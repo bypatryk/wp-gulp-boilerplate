@@ -1,6 +1,11 @@
-gulp = require('gulp');
+var gulp = require('gulp'),
+	plugins = require('gulp-load-plugins')({
+		camelize: true
+	});
 
-gulp.task('build', function () {
-	gulp.src('content/src/**/*')
-		.pipe(gulp.dest('content/build'))
-});
+var task = function (callback) {
+	plugins.sequence('php', 'styles', callback);
+}
+
+gulp.task('build', task);
+module.exports = task;

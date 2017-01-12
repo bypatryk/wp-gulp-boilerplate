@@ -1,6 +1,13 @@
-gulp = require('gulp');
+var gulp = require('gulp'),
+	plugins = require('gulp-load-plugins')({
+		camelize: true
+	});
 
-gulp.task('dist', function () {
-	gulp.src('content/src/**/*')
-		.pipe(gulp.dest('content/dist'))
-});
+var distTask = function (callback) {
+	global.dist = true;
+
+	plugins.sequence('clean', 'build', callback);
+}
+
+gulp.task('dist', distTask);
+module.exports = distTask;
