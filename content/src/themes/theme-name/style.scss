@@ -1,0 +1,31 @@
+/*!
+Theme Name: Theme Name
+Theme URI: http://patryk.me/
+Author: Patryk Pawlowski
+Author URI: http://patryk.me/
+Description: 
+Version: 
+License: 
+License URI: 
+Tags: 
+*/
+
+
+/**
+ * Core styles
+ * vars, mixins, helpers, etc.
+ */
+
+@import 'assets/styles/core/**/*';
+
+/**
+ * Global styles
+ */
+
+@import 'assets/styles/globals/**/*';
+
+/**
+ * Compontent styles
+ */
+
+@import 'compontents/**/*';
