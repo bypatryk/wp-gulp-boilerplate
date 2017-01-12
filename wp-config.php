@@ -62,12 +62,12 @@ if (is_localhost()) {
  * `build` and `dist` folders are generated with Gulp
  */
 if (is_localhost()) {
-	define ('MY_WP_CONTENT_DIR', '/build');
+	define ('CONTENT_DIR', '/content/build');
 } else {
-	define ('MY_WP_CONTENT_DIR', '/dist');
+	define ('CONTENT_DIR', '/content/dist');
 }
-define ('WP_CONTENT_DIR', __DIR__ . MY_WP_CONTENT_DIR);
-define ('WP_CONTENT_URL', WP_HOME . MY_WP_CONTENT_DIR);
+define ('WP_CONTENT_DIR', __DIR__ . CONTENT_DIR);
+define ('WP_CONTENT_URL', WP_HOME . CONTENT_DIR);
 
 /**
  * Define wordpress core directory
